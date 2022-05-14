@@ -5,7 +5,7 @@ import Product from '../component/Product';
 import Modal from '../component/Modal';
 import ModalPortal from '../component/ModalPortal';
 import Button from '@mui/material/Button';
-import { products } from "../data/products";
+import { productsData } from "../data/products";
 
 import _ from 'lodash';
 
@@ -16,7 +16,7 @@ export default function Home(props) {
     const [address, setAddress] = useState("");
     const [addressDetail, setAddressDetail] = useState("");
     const [phone, setPhoneNumber] = useState("");
-    const [products, setProducts] = useState(() => !_.isEmpty(location.state?.products) ? [...location.state.products] : [...products]);
+    const [products, setProducts] = useState(() => !_.isEmpty(location.state?.products) ? [...location.state.products] : [...productsData]);
     const [needCurrencyBill, setCurrencyBill] = useState(false);
     const [isOpen, setOpen] = useState(false);
 
@@ -72,7 +72,7 @@ export default function Home(props) {
     }
 
     return (
-    <>
+    <div>
         <form onSubmit={submitHandler}>
          <Input type="text" title="이름" value={name} onChange={(event) => setName(event.target.value)}/>
          <Button variant="contained" onClick={openModal}>{"주소조회"}</Button>
@@ -82,10 +82,13 @@ export default function Home(props) {
          <ModalPortal>
             <Modal isOpen={isOpen} callback={modalComplete} />
          </ModalPortal>
-         {
-           products.map((product, index) =>
-             <Product {...product} key={product.id} onChange={setProduct(index)} moveToDetail={moveToDetail(index)}/>)
-         }
+          <div className={"grid grid-cols-4 divide-x"}>
+            {
+              products.map((product, index) =>
+                  <Product {...product} key={product.id} onChange={setProduct(index)} moveToDetail={moveToDetail(index)}/>)
+            }
+          </div>
+
 
          <label>{"현금 영수증 여부 : "}</label><input type="checkbox" name="needCurrencyBill" checked={needCurrencyBill} onChange={() => setCurrencyBill(!needCurrencyBill)} />
          <Button variant="contained" type="submit">{"제출하기"}</Button>
@@ -93,6 +96,6 @@ export default function Home(props) {
       <div>
         <label>{`최종금액 : ${calcPrice()}`}</label>
       </div>
-    </>
+    </div>
     )
 }

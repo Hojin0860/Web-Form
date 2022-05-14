@@ -1,4 +1,5 @@
 import { useLocation, useParams, useNavigate} from "react-router-dom";
+import Button from '@mui/material/Button';
 export default function ProductDetail(props) {
     let navigate = useNavigate();
     let location = useLocation();
@@ -8,9 +9,9 @@ export default function ProductDetail(props) {
         navigate("../", products)
     }
     return (
-        <div>
-            <button onClick={back}>{"뒤로가기"}</button>
+        <>
+            <Button variant="contained" onClick={back}>{"뒤로가기"}</Button>
             <label>{products[productId].title}</label>
-        </div>
+        </>
     )
 }
