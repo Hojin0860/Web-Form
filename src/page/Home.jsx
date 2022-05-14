@@ -5,6 +5,7 @@ import Product from '../component/Product';
 import Modal from '../component/Modal';
 import ModalPortal from '../component/ModalPortal';
 import Button from '@mui/material/Button';
+import { products } from "../data/products";
 
 import _ from 'lodash';
 
@@ -15,23 +16,13 @@ export default function Home(props) {
     const [address, setAddress] = useState("");
     const [addressDetail, setAddressDetail] = useState("");
     const [phone, setPhoneNumber] = useState("");
-    const [products, setProducts] = useState(() => {
-      return !_.isEmpty(location.state?.products) ? [...location.state.products] :
-
-      [
-      {"id": 1, "title": "모퉁이뜨개방", "price": 31000, "count": 0, "selected": false},
-      {"id": 2, "title": "소장", "price": 17000, "count": 0, "selected": false},
-      {"id": 3, "title": "책갈피", "price": 3000, "count": 0, "selected": false},
-      {"id": 4, "title": "어드벤트캘린더", "price": 26000, "count": 0, "selected": false}
-    ]
-  });
+    const [products, setProducts] = useState(() => !_.isEmpty(location.state?.products) ? [...location.state.products] : [...products]);
     const [needCurrencyBill, setCurrencyBill] = useState(false);
     const [isOpen, setOpen] = useState(false);
 
   
     const submitHandler = (event) => {
       event.preventDefault()
-      
       navigate("../success")
     }
   
@@ -64,12 +55,12 @@ export default function Home(props) {
       let newProducts = [...products]
       const target = event.target;
       if (target.name === "selected") {
-          const count = (newProducts[id].count == 0) ? 1 : newProducts[id].count
+          const count = (newProducts[id].count === 0) ? 1 : newProducts[id].count
           newProducts[id] = {...newProducts[id], "selected": !newProducts[id].selected, "count": count} 
       } 
       if (target.name === "count") {
         const count = _.isEmpty(target.value) ? 0 : _.toNumber(target.value);
-        const selected = _.toNumber(target.value) === 0 ? false : true
+        const selected = _.toNumber(target.value) !== 0
   
         newProducts[id] = {...newProducts[id], "count": count, "selected": selected} 
       }
@@ -85,16 +76,18 @@ export default function Home(props) {
         <form onSubmit={submitHandler}>
          <Input type="text" title="이름" value={name} onChange={(event) => setName(event.target.value)}/>
          <Button variant="contained" onClick={openModal}>{"주소조회"}</Button>
-         <Input type="text" title="주소" value={address} onChange={(event) => addressDetail(event.target.value)}/>
+         <Input type="text" title="주소" value={address} onChange={(event) => setAddress(event.target.value)}/>
          <Input type="text" title="상세주소" value={addressDetail} onChange={(event) => setAddressDetail(event.target.value)}/>
          <Input type="tel" title="전화번호" value={phone} onChange={(event) => setPhoneNumber(event.target.value)}/>
          <ModalPortal>
             <Modal isOpen={isOpen} callback={modalComplete} />
          </ModalPortal>
-         {products.map((product, index) => {
-          return <Product {...product} key={product.id} onChange={setProduct(index)} moveToDetail={moveToDetail(index)}/>
-         })}
-         <label>{"현금 영수증 여부 : "}</label><input type="checkbox" name="needCurrencyBill" value={needCurrencyBill} onChange={() => setCurrencyBill(!needCurrencyBill)} />
+         {
+           products.map((product, index) =>
+             <Product {...product} key={product.id} onChange={setProduct(index)} moveToDetail={moveToDetail(index)}/>)
+         }
+
+         <label>{"현금 영수증 여부 : "}</label><input type="checkbox" name="needCurrencyBill" checked={needCurrencyBill} onChange={() => setCurrencyBill(!needCurrencyBill)} />
          <Button variant="contained" type="submit">{"제출하기"}</Button>
       </form>
       <div>

@@ -9,11 +9,11 @@ export default function Product({title, price, count, selected, onChange, moveTo
                 <label>{`Price: ${price}`}</label>
             </div>
             <div onClick={moveToDetail}>
-                <img src={logo} />
+                <img src={logo}  alt={"alt"}/>
             </div>
             <div>
                 <label>{`count: `}</label> 
-                <input type="text" name="count" value={count} onChange={onChange}/>
+                <input type="number" name="count" value={count} onChange={onChange}/>
             </div>
             <div>
             <input type="checkbox" name="selected" checked={selected} onChange={onChange}/>
