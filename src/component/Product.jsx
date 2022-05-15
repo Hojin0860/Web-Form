@@ -1,4 +1,4 @@
-import logo from '../logo.svg';
+
 export default function Product({title, price, count, selected, onChange, moveToDetail, imgSrc, imgAlt}) {
     return (
         <div className="flex justify-center">
